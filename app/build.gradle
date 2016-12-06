@@ -40,5 +40,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.jakewharton:butterknife:8.1.0'
+    compile "com.android.support:recyclerview-v7:23.0.1"
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
 }

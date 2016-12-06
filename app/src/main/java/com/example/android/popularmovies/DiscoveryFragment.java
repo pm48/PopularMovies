@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,33 +37,46 @@ import java.util.List;
 
 public  class DiscoveryFragment extends Fragment {
     public static final String EXTRA_PARAMS = "movie";
+    private RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
-    private  GridView gridView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Movie> movieList ;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
+        if(savedInstanceState==null || !(savedInstanceState.containsKey("movies")))
+        {
+            movieList = new ArrayList<Movie>();
+        }
+        else {
+            movieList = savedInstanceState.getParcelableArrayList("movies");
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movies",movieList);
+        super.onSaveInstanceState(outState);
     }
 
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_discovery,container,false);
-        movieAdapter = new MovieAdapter(getActivity(), new ArrayList<Movie>());
-        gridView = (GridView) rootView.findViewById(R.id.gridview_movies);
-        gridView.setAdapter(movieAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        movieAdapter = new MovieAdapter(new ArrayList<Movie>(), new MovieAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = movieAdapter.getItem(position);
+            public void onItemClick(Movie movie) {
                 Intent intent = new Intent(getActivity(),DetailActivity.class).putExtra(EXTRA_PARAMS,movie);
                 startActivity(intent);
-
             }
         });
-
+        mRecyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        mRecyclerView.setAdapter(movieAdapter);
         return rootView;
 
     }
@@ -99,6 +113,7 @@ public  class DiscoveryFragment extends Fragment {
     }
 
     public class FetchMoviesTask extends AsyncTask<String,Void,List<Movie>> {
+        private List<Integer> ids = new ArrayList<>();
 
         private List<Movie> parseJSON(String movieJsonStr) throws JSONException{
             List<Movie> movieList = new ArrayList<>();
@@ -115,6 +130,7 @@ public  class DiscoveryFragment extends Fragment {
                 movieObj.setSynopsis(movieDetails.getString("overview"));
                 movieObj.setVoteAverage(movieDetails.getString("vote_average"));
                 movieList.add(movieObj);
+                ids.add(movieDetails.getInt("id"));
             }
 
             return movieList;
@@ -126,10 +142,11 @@ public  class DiscoveryFragment extends Fragment {
             if (movies!=null)
             {
                 movieAdapter.clear();
-                for(Movie movie: movies)
-                {
-                    movieAdapter.add(movie);
-                }
+                movieAdapter.addAll(movies);
+            }
+            else
+            {
+                Toast.makeText(getActivity()," Something went wrong, please check your internet connection and try again! ",Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -138,12 +155,13 @@ public  class DiscoveryFragment extends Fragment {
         protected List<Movie> doInBackground(String...params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
+            //String appId="7ec8978a5e5bc92a1e837697e5ca866f";
             String movieJsonStr = null;
 
             try{
                 String baseUrl = "http://api.themoviedb.org/3/movie/".concat(params[0]);
 
-                String apiKey = "?api_key=" +BuildConfig.API_KEY;
+                String apiKey = "?api_key=" + BuildConfig.API_KEY;
                 URL url = new URL(baseUrl.concat(apiKey));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

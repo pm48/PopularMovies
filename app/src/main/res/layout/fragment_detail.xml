@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,16 +11,15 @@
         android:id="@+id/ivPosterImage"
         style="@style/img_layout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/tvTitle"
          />
 
 
     <TextView
         android:id="@+id/tvTitle"
         style="@style/title_layout"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivPosterImage"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <TextView
         android:id="@+id/tvReleaseDate"
@@ -38,3 +41,4 @@
 
 
 </RelativeLayout>
+</ScrollView>

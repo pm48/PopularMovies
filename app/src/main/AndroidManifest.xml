@@ -20,7 +20,12 @@
         <activity android:name=".SettingsActivity" />
         <activity
             android:name=".DetailActivity"
-            android:label="@string/title_activity_detail"></activity>
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".DiscoveryScreenActivity" >
+        </activity>
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.android.popularmovies.DiscoveryScreenActivity" />
     </application>
 
 </manifest>
