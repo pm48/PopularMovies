@@ -9,4 +9,6 @@
     <string name="pref_label_most_popular">Most Popular</string>
     <string name="pref_label_top_rate">Top Rated</string>
     <string name="title_activity_detail">MovieDetail</string>
+    <string name="favorite_add_button">MARK AS FAVORITE</string>
+    <string name="trailer_header">Trailers: </string>
 </resources>

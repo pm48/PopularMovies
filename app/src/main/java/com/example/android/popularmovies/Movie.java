@@ -13,6 +13,8 @@ public class Movie implements Parcelable{
     private String releaseDate;
     private String synopsis;
     private String voteAverage;
+    private int id;
+
 
     private Movie(Parcel in)
     {
@@ -21,13 +23,20 @@ public class Movie implements Parcelable{
         releaseDate = in.readString();
         synopsis = in.readString();
         voteAverage = in.readString();
+        id = in.readInt();
     }
 
     public Movie() {
 
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -93,6 +102,7 @@ public class Movie implements Parcelable{
         dest.writeString(releaseDate);
         dest.writeString(synopsis);
         dest.writeString(voteAverage);
+        dest.writeInt(id);
     }
 
 }

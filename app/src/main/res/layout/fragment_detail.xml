@@ -1,44 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivPosterImage"
-        style="@style/img_layout"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvTitle"
-         />
-
-
-    <TextView
-        android:id="@+id/tvTitle"
-        style="@style/title_layout"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/tvReleaseDate"
-        style="@style/subtitle_layout"
-        android:layout_below="@+id/tvTitle"
-        android:layout_toRightOf="@+id/ivPosterImage" />
-
-    <TextView
-        android:id="@+id/tvVote"
-        style="@style/subtitle_layout"
-        android:layout_below="@+id/tvReleaseDate"
-        android:layout_toRightOf="@+id/ivPosterImage" />
-
-    <TextView
-        android:id="@+id/tvSynopsis"
-        style="@style/subtitle_layout"
-        android:layout_below="@+id/ivPosterImage"
-       />
+        <ImageView
+            android:id="@+id/ivPosterImage"
+            style="@style/img_layout"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvTitle" />
 
 
-</RelativeLayout>
-</ScrollView>
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/title_layout"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvReleaseDate"
+            style="@style/subtitle_layout"
+            android:layout_below="@+id/tvTitle"
+            android:layout_toRightOf="@+id/ivPosterImage" />
+
+        <TextView
+            android:id="@+id/tvVote"
+            style="@style/subtitle_layout"
+            android:layout_below="@+id/tvReleaseDate"
+            android:layout_toRightOf="@+id/ivPosterImage" />
+
+        <Button
+            android:id="@+id/btnFavorite"
+            style="@style/subtitle_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvVote"
+            android:text="@string/favorite_add_button"
+            android:textAllCaps="true" />
+
+
+        <TextView
+            android:id="@+id/tvSynopsis"
+            style="@style/subtitle_layout"
+            android:layout_below="@+id/ivPosterImage" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/tvTrailer"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSynopsis"
+            android:text="@string/trailer_header"/>
+
+        <ListView
+            android:id="@+id/list_item_trailers"
+            android:layout_below="@id/tvTrailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </ListView>
+
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

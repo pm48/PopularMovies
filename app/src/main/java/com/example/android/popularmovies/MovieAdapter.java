@@ -95,12 +95,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void remove(Movie item) {
-        int position = movies.indexOf(item);
-        movies.remove(position);
-        notifyItemRemoved(position);
-
-    }
 
 
 }

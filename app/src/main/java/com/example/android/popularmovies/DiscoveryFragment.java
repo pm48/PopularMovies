@@ -39,7 +39,6 @@ public  class DiscoveryFragment extends Fragment {
     public static final String EXTRA_PARAMS = "movie";
     private RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Movie> movieList ;
 
 
@@ -73,10 +72,12 @@ public  class DiscoveryFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         mRecyclerView.setAdapter(movieAdapter);
+
         return rootView;
 
     }
@@ -129,8 +130,10 @@ public  class DiscoveryFragment extends Fragment {
                 movieObj.setReleaseDate(movieDetails.getString("release_date"));
                 movieObj.setSynopsis(movieDetails.getString("overview"));
                 movieObj.setVoteAverage(movieDetails.getString("vote_average"));
+                int id = movieDetails.getInt("id");
+                movieObj.setId(id);
                 movieList.add(movieObj);
-                ids.add(movieDetails.getInt("id"));
+                ids.add(id);
             }
 
             return movieList;
@@ -155,13 +158,14 @@ public  class DiscoveryFragment extends Fragment {
         protected List<Movie> doInBackground(String...params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            //String appId="7ec8978a5e5bc92a1e837697e5ca866f";
+            String appId="7ec8978a5e5bc92a1e837697e5ca866f";
             String movieJsonStr = null;
 
             try{
                 String baseUrl = "http://api.themoviedb.org/3/movie/".concat(params[0]);
 
-                String apiKey = "?api_key=" + BuildConfig.API_KEY;
+                //String apiKey = "?api_key=" + BuildConfig.API_KEY;
+                String apiKey = "?api_key=" + appId;
                 URL url = new URL(baseUrl.concat(apiKey));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
