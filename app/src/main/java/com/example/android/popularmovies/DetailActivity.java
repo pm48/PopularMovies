@@ -1,10 +1,14 @@
 package com.example.android.popularmovies;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.Intent.ACTION_VIEW;
 import static com.example.android.popularmovies.DiscoveryFragment.EXTRA_PARAMS;
 
 public class DetailActivity extends ActionBarActivity {
@@ -82,10 +86,9 @@ public class DetailActivity extends ActionBarActivity {
         TextView tvSynopsis;
         @BindView(R.id.tvVote)
         TextView tvVote;
-        @BindView(R.id.list_item_trailers)
-        ListView lvTrailer;
         private TrailerAdapter trailerAdapter;
-        private List<Trailer> mTrailers;
+        private RecyclerView mRecyclerView;
+
 
 
         @Override
@@ -108,8 +111,26 @@ public class DetailActivity extends ActionBarActivity {
                 FetchTrailers fetchTrailers = new FetchTrailers();
                 fetchTrailers.execute(movie.getId());
             }
-            trailerAdapter = new TrailerAdapter(getActivity(), new ArrayList<Trailer>());
-            lvTrailer.setAdapter(trailerAdapter);
+            trailerAdapter = new TrailerAdapter(new ArrayList<Trailer>(), new TrailerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(Trailer trailer) {
+                    Intent appIntent = new Intent(ACTION_VIEW, Uri.parse("vnd.youtube:" + trailer.getKey()));
+                    Intent webIntent = new Intent(ACTION_VIEW,
+                            Uri.parse("http://www.youtube.com/watch?v=" + trailer.getKey()));
+                    try {
+                        startActivity(appIntent);
+                    } catch (ActivityNotFoundException ex) {
+                        startActivity(webIntent);
+                    }
+
+                }
+            });
+
+            mRecyclerView = (RecyclerView)rootView.findViewById(R.id.recycler_view1);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager( new LinearLayoutManager(getActivity()));
+            mRecyclerView.setAdapter(trailerAdapter);
+
             return rootView;
         }
 
@@ -198,6 +219,7 @@ public class DetailActivity extends ActionBarActivity {
                     Trailer trailer = new Trailer();
                     trailer.setKey(jsonDetails.getString("key"));
                     trailer.setName(jsonDetails.getString("name"));
+                    trailer.setId(jsonDetails.getString("id"));
                     trailers.add(trailer);
                 }
                 return trailers;
@@ -208,10 +230,13 @@ public class DetailActivity extends ActionBarActivity {
             protected void onPostExecute(List<Trailer> trailers) {
                 if (trailers != null) {
                     trailerAdapter.clear();
-                    for (Trailer trailer : trailers) {
-                        trailerAdapter.add(trailer);
-                    }
+                    trailerAdapter.addAll(trailers);
                 }
+                else
+                {
+                    Toast.makeText(getActivity()," Something went wrong, please check your internet connection and try again! ",Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         }

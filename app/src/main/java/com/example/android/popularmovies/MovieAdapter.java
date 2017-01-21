@@ -15,7 +15,6 @@ import java.util.List;
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
-    private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
     private List<Movie> movies;
     private final OnItemClickListener listener;
 
@@ -80,10 +79,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     }
 
-    public void add(Movie item) {
-        movies.add(item);
-        notifyDataSetChanged();
-    }
 
     public void addAll(List<Movie> items) {
         movies.addAll(items);
