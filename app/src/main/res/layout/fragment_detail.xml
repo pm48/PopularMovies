@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     android:fillViewport="true" >
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/ivPosterImage"
@@ -35,16 +41,19 @@
         <Button
             android:id="@+id/btnFavorite"
             style="@style/subtitle_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@id/tvVote"
-            android:text="@string/favorite_add_button"
-            android:textAllCaps="true" />
+            android:layout_width="90dp"
+            android:gravity="center"
+            android:text="@string/mark_favorite"
+            android:layout_toRightOf="@+id/ivPosterImage"
+            android:textAllCaps="true"
+            android:background="@color/green"/>
 
 
         <TextView
             android:id="@+id/tvSynopsis"
             style="@style/subtitle_layout"
+            android:layout_marginTop="14dp"
             android:layout_below="@+id/ivPosterImage" />
 
         <TextView
@@ -54,14 +63,21 @@
             android:layout_below="@id/tvSynopsis"
             android:text="@string/trailer_header"/>
 
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recycler_view1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:scrollbars="vertical" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_Trailers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvTrailer"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_Reviews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/recycler_Trailers"/>
 
     </RelativeLayout>
+
+
 </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

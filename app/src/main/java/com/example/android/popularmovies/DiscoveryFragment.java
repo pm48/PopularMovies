@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -40,6 +41,15 @@ public  class DiscoveryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MovieAdapter movieAdapter;
     private ArrayList<Movie> movieList ;
+    private static final String[] MOVIE_COLUMNS = {
+            MovieContract._ID,
+            MovieContract.COLUMN_MOVIE_ID,
+            MovieContract.COLUMN_TITLE,
+            MovieContract.COLUMN_IMAGE,
+            MovieContract.COLUMN_FAVORITE
+
+    };
+
 
 
     @Override
@@ -47,7 +57,7 @@ public  class DiscoveryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(savedInstanceState==null || !(savedInstanceState.containsKey("movies")))
         {
-            movieList = new ArrayList<Movie>();
+            movieList = new ArrayList<>();
         }
         else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
@@ -78,6 +88,7 @@ public  class DiscoveryFragment extends Fragment {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         mRecyclerView.setAdapter(movieAdapter);
 
+
         return rootView;
 
     }
@@ -107,10 +118,60 @@ public  class DiscoveryFragment extends Fragment {
     }
 
     private void updateUI() {
-        FetchMoviesTask moviesTask = new FetchMoviesTask();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMode = preferences.getString(getString(R.string.pref_sort_key),getString(R.string.pref_most_popular));
-        moviesTask.execute(sortMode);
+        if (sortMode.contentEquals("favorites")){
+                FetchFavoriteMovies favoriteMovies = new FetchFavoriteMovies();
+                favoriteMovies.execute();
+
+        }
+        else {
+            FetchMoviesTask moviesTask = new FetchMoviesTask();
+            moviesTask.execute(sortMode);
+        }
+    }
+
+    public class FetchFavoriteMovies extends AsyncTask<Void,Void,List<Movie>>{
+
+        @Override
+        protected List<Movie> doInBackground(Void... params) {
+            Cursor cursor = getContext().getContentResolver().query(
+                    MovieContract.CONTENT_URI,
+                    MOVIE_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+            return getFavoriteMoviesDataFromCursor(cursor);
+        }
+
+        private List<Movie> getFavoriteMoviesDataFromCursor(Cursor cursor) {
+            List<Movie> results = new ArrayList<>();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Movie movie = new Movie();
+                    movie.setId(cursor.getInt(1));
+                    movie.setTitle(cursor.getString(2));
+                    movie.setPoster(cursor.getString(3));
+                    results.add(movie);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            if (movies!=null)
+            {
+                movieAdapter.clear();
+                movieAdapter.addAll(movies);
+            }
+            else
+            {
+                Toast.makeText(getActivity()," Something went wrong, please check your internet connection and try again! ",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public class FetchMoviesTask extends AsyncTask<String,Void,List<Movie>> {
@@ -125,7 +186,7 @@ public  class DiscoveryFragment extends Fragment {
             {
                 JSONObject movieDetails = resultArray.getJSONObject(i);
                 Movie movieObj = new Movie();
-                movieObj.setPoster(movieDetails.getString("poster_path"));
+                movieObj.setPoster("http://image.tmdb.org/t/p/w185/"+movieDetails.getString("poster_path"));
                 movieObj.setTitle(movieDetails.getString("title"));
                 movieObj.setReleaseDate(movieDetails.getString("release_date"));
                 movieObj.setSynopsis(movieDetails.getString("overview"));
@@ -164,8 +225,8 @@ public  class DiscoveryFragment extends Fragment {
             try{
                 String baseUrl = "http://api.themoviedb.org/3/movie/".concat(params[0]);
 
-                //String apiKey = "?api_key=" + BuildConfig.API_KEY;
-                String apiKey = "?api_key=" + appId;
+                String apiKey = "?api_key=" +BuildConfig.API_KEY;
+
                 URL url = new URL(baseUrl.concat(apiKey));
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

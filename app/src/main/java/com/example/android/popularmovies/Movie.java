@@ -14,6 +14,17 @@ public class Movie implements Parcelable{
     private String synopsis;
     private String voteAverage;
     private int id;
+    private Integer favorite ;
+
+
+    public Integer getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Integer favorite) {
+        this.favorite = favorite;
+    }
+
 
 
     private Movie(Parcel in)
@@ -24,11 +35,14 @@ public class Movie implements Parcelable{
         synopsis = in.readString();
         voteAverage = in.readString();
         id = in.readInt();
+        favorite  = in.readInt();
+
     }
 
     public Movie() {
-
+        favorite=0;
     }
+
 
     public int getId() {
         return id;
@@ -74,7 +88,7 @@ public class Movie implements Parcelable{
     }
 
     public void setPoster(String poster) {
-        this.poster = "http://image.tmdb.org/t/p/w185/"+poster;
+        this.poster = poster;
     }
 
     @Override
@@ -103,6 +117,7 @@ public class Movie implements Parcelable{
         dest.writeString(synopsis);
         dest.writeString(voteAverage);
         dest.writeInt(id);
+//        dest.writeInt(favorite);
     }
 
 }

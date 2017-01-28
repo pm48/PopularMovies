@@ -4,11 +4,15 @@
     <string name="action_settings">Settings</string>
     <string name="pref_sort_title">Sort Order</string>
     <string name="pref_most_popular">popular</string>
+    <string name="pref_favorites">favorites</string>
     <string name="pref_top_rated">top_rated</string>
     <string name="pref_sort_key">ordering</string>
     <string name="pref_label_most_popular">Most Popular</string>
     <string name="pref_label_top_rate">Top Rated</string>
+    <string name="pref_label_favorite">Favorites</string>
     <string name="title_activity_detail">MovieDetail</string>
-    <string name="favorite_add_button">MARK AS FAVORITE</string>
+    <string name="mark_favorite">MARK AS FAVORITE</string>
     <string name="trailer_header">Trailers: </string>
+    <string name="marked_favorite">MARKED FAVORITE</string>
+
 </resources>

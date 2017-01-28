@@ -26,6 +26,12 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.example.android.popularmovies.DiscoveryScreenActivity" />
+
+        <provider
+            android:name=".MovieProvider"
+            android:authorities="com.example.android.popularmovies.MovieProvider"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>

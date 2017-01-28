@@ -39,7 +39,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_list, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_list_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -49,7 +49,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Trailer trailer = trailers.get(position);
-        holder.playButton.setImageBitmap(null);
+
+        //holder.playButton.setImageBitmap(null);
+        holder.trailer_Title.setText(trailer.getName());
         holder.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
